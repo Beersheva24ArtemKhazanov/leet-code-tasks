@@ -3,7 +3,16 @@
 // You may assume that each input would have exactly one solution, and you may not use the same element twice.
 // You can return the answer in any order.
 export function twoSum(nums, target) {
-    // TODO
+    let res = [];
+    const map = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        const comp = target - nums[i];
+        if (map.has(comp)) {
+            res = [map.get(comp), i];
+        }
+        map.set(nums[i], i)
+    }
+    return res;
 };
 
 
@@ -14,14 +23,44 @@ export function twoSum(nums, target) {
 // 2 Open brackets must be closed in the correct order.
 // 3 Every close bracket has a corresponding open bracket of the same type.
 export function isValid(s) {
-    // TODO
+    const mapping = {
+        ")": "(",
+        "}": "{",
+        "]": "["
+    }
+    let res = true;
+    const stack = []
+
+    for (const char of s) {
+        if (Object.values(mapping).includes(char)) {
+            stack.push(char);
+        } else if (mapping.hasOwnProperty(char)) {
+            if (!stack.length || mapping[char] !== stack.pop()) {
+                res = false;
+            }
+        }
+    }
+    return res;
 };
 
 
 // Merge Intervals
 // Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 export function merge(intervals) {
-    // TODO
+    let prev = intervals[0];
+    const merged = [];
+
+    for (let i = 1; i < intervals.length; i++) {
+        let current = intervals[i];
+        if (current[0] <= prev[1]) {
+            prev[1] = Math.max(current[1], prev[1]);
+        } else {
+            merged.push(prev);
+            prev = current;
+        }
+    }
+    merged.push(prev);
+    return merged;
 };
 
 
