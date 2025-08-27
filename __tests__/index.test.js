@@ -1,4 +1,4 @@
-import { twoSum, isValid, merge, lengthOfLongestSubstring, levelOrder, isAnagram, searchMatrix, hasCycle, isPalindrome } from "../index.js";
+import { twoSum, isValid, merge, lengthOfLongestSubstring, levelOrder, isAnagram, searchMatrix, hasCycle, isPalindrome,     maxNumberOfNonIntersrctingSegments, limitFunc } from "../index.js";
 import { describe, expect, test } from '@jest/globals';
 
 class TreeNode {
@@ -38,26 +38,23 @@ describe('leetCode Tests', () => {
             }
         }
         return root;
-    };
-
-    function arrayToCyclicLinkedList(arr, pos) {
-        let head = null;
-        if (arr.length) {
-            head = new ListNode(arr[0]);
-            let current = head;
-            let cycleEntry = null;
-    
-            for (let i = 1; i < arr.length; i++) {
-                current.next = new ListNode(arr[i]);
-                current = current.next;
-                if (i === pos || pos === 0) cycleEntry = current;
-            }
-    
-            if (pos >= 0) current.next = cycleEntry;
-        };
-
-        return head;
     }
+
+function arrayToCyclicLinkedList(arr, pos) {
+    if (!arr.length) return null;
+    let head = new ListNode(arr[0]);
+    let current = head;
+    let cycleEntry = pos === 0 ? head : null;
+
+    for (let i = 1; i < arr.length; i++) {
+        current.next = new ListNode(arr[i]);
+        current = current.next;
+        if (i === pos) cycleEntry = current;
+    }
+
+    if (pos >= 0) current.next = cycleEntry;
+    return head;
+}
 
     test('Two Sums test', () => {
         expect(twoSum([2, 7, 11, 15], 9)).toEqual([0, 1]);
@@ -114,5 +111,22 @@ describe('leetCode Tests', () => {
         expect(isPalindrome("A man, a plan, a canal: Panama")).toBeTruthy();
         expect(isPalindrome("race a car")).toBeFalsy();
         expect(isPalindrome(" ")).toBeTruthy();
+    });
+    test('Max Number Of Non-Intersecting segments test', () => {
+        expect(maxNumberOfNonIntersrctingSegments([10, 1, 3, 1, 2, 2, 1, 0, 4])).toBe(3);
+        expect(maxNumberOfNonIntersrctingSegments([5, 3, 1, 3, 2, 3])).toBe(1);
+        expect(maxNumberOfNonIntersrctingSegments([9, 9, 9, 9, 9])).toBe(1);
+        expect(maxNumberOfNonIntersrctingSegments([1, 5, 2, 4, 3, 3])).toBe(3);
+    });
+
+    test('Limit Function Test', () => {
+        const executeFunc = limitFunc((a) => a, 3);
+        const expected = ["Hello, World!", "Hello, World!", "Hello, World!", "Error"];
+        const actual = [];
+        actual.push(executeFunc("Hello, World!"));
+        actual.push(executeFunc("Hello, World!"));
+        actual.push(executeFunc("Hello, World!"));
+        actual.push(executeFunc("Hello, World!"));
+        expect(actual).toEqual(expected);
     });
 });
