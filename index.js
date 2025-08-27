@@ -68,15 +68,15 @@ export function merge(intervals) {
 // Given a string s, find the length of the longest substring without duplicate characters.
 export function lengthOfLongestSubstring(s) {
     let maxLength = 0;
-    const charSet = new Set();
+    let set = new Set();
     let left = 0;
 
     for (let right = 0; right < s.length; right++) {
-        while (charSet.has(s[right])) {
-            charSet.delete(s[left]);
+        while (set.has(s[right])) {
+            set.delete(s[left])
             left++;
         }
-        charSet.add(s[right]);
+        set.add(s[right]);
         maxLength = Math.max(maxLength, right - left + 1);
     }
     return maxLength;
@@ -87,12 +87,12 @@ export function lengthOfLongestSubstring(s) {
 // Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
 
 export function levelOrder(root) {
-    let res = [];
     let queue = [root];
+    let res = [];
 
-    while (queue.length && root) {
-        let levelSize = queue.length;
+    while(queue.length && root) {
         let valLevel = [];
+        let levelSize = queue.length;
         for (let i = 0; i < levelSize; i++) {
             let curNode = queue.shift();
             valLevel.push(curNode.val);
@@ -113,11 +113,11 @@ export function isAnagram(s, t) {
         res = false;
     } else {
         let map = new Map();
-        for (let char of s) {
+        for ( let char of s) {
             map.set(char, (map.get(char) || 0) + 1);
         }
         for (let char of t) {
-            if (!map.has(char) || map.get(char) === 0) {
+            if (!map.has(char) || map.get(char) == 0) {
                 res = false;
             }
             if (res) {
@@ -141,18 +141,18 @@ export function searchMatrix(matrix, target) {
     let res = false;
 
     while (left <= right && !res) {
-        let mid = (right + left) >> 1;
-        let [row, col] = [Math.floor(mid / cols), mid % cols];
+        let mid = (left + right) >> 1;
+        const [row, col] = [Math.floor(mid / cols), mid % cols];
         const guess = matrix[row][col];
 
-        if (guess === target) {
+        if (guess == target) {
             res = true;
-        }
-        if (guess < target) {
-            left = mid + 1;
         }
         if (guess > target) {
             right = mid - 1;
+        }
+        if (guess < target) {
+            left = mid + 1;
         }
     }
     return res;
@@ -169,8 +169,8 @@ export function hasCycle(head) {
 
     while (cur && cur.next && !res) {
         cur = cur.next.next;
-        prev = prev.next
-        res = cur === prev ? true : false
+        prev = prev.next;
+        res = cur === prev ? true : false;
     }
     return res;
 };
@@ -179,7 +179,7 @@ export function hasCycle(head) {
 // A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
 // Given a string s, return true if it is a palindrome, or false otherwise.
 export function isPalindrome(s) {
-    s = s.toLowerCase().replace(/[^a-z0-9]/g, '');
+    s = s.toLowerCase().replace(/[^a-z0-9]/g,'');
     let left = 0;
     let right = s.length - 1;
     let res = true;
@@ -192,115 +192,4 @@ export function isPalindrome(s) {
         right--;
     }
     return res;
-}
-
-// You are given an array A of integers. Find the maximum number of non-intersecting segments of length 2 (two adjacent elements), such that segments have an equal sum.
-// For example, given A = [10, 1, 3, 1, 2, 2, 1, 0, 4], there are three non-intersecting segments, each whose sum is equal to 4: (1, 3), (2, 2), (0,4). Another three non-intersecting segments are: (3, 1), (2, 2), (0,4).
-export function maxNumberOfNonIntersrctingSegments(array) {
-    const map = new Map();
-    for (let i = 0; i < array.length - 1; i++) {
-        let sum = array[i] + array[i + 1];
-        map.set(sum, (map.get(sum) || 0) + 1);
-        if (array[i + 1] === array[i - 1]) {
-            map.set(sum, (map.get(sum) || 0) - 1);
-        }
-    }
-    return Math.max(...map.values());
-}
-
-// const executeFunc = limitFunc(console.log, 3)
-
-// executeFunc("Hello, World!") // => Hello, World!
-// executeFunc("Hello, World!") // => Hello, World!
-// executeFunc("Hello, World!") // => Hello, World!
-// executeFunc("Hello, World!") // => Throw new Error
-export const limitFunc = (func, limit) => {
-    let count = 0;
-    return (...params) => {
-        if (count < limit) {
-            count++;
-            return func(...params);
-        } else {
-            return "Error";
-        }
-    }
-}
-
-const func = (arr1, arr2) => {
-    const set1 = new Set(arr1);
-    const set2 = new Set(arr2);
-
-    const intersection = arr1.filter(x => set2.has(x));
-    const onlyFirst = arr1.filter(x => !set2.has(x));
-    const onlySecond = arr2.filter(x => !set1.has(x));
-
-    return {
-        onlyFirst,
-        onlySecond,
-        intersection,
-    };
-};
-
-// // Example
-// const q = queue();
-// q.push(10);
-// q.push(20);
-// q.push(30);
-const queue = () => {
-    let head = null;
-    let tail = null;
-    let size = 0;
-
-    // Node structure
-    const createNode = (value) => ({value, next: null});
-
-    const push = (value) => {
-        const node = createNode(value);
-        if (tail) {
-            tail.next = node;
-        }
-        tail = node;
-        if (!head) {
-            head = node;
-        }
-        size++;
-    };
-
-    const pop = () => {
-        if (!head) return undefined; // empty queue
-        const value = head.value;
-        head = head.next;
-        if (!head) { // queue became empty
-            tail = null;
-        }
-        size--;
-        return value;
-    };
-
-    const peek = () => (head ? head.value : undefined);
-
-    return {
-        get head() {
-            return head ? head.value : null;
-        },
-        get tail() {
-            return tail ? tail.value : null;
-        },
-        get size() {
-            return size;
-        },
-        push,
-        pop,
-        peek
-    };
-};
-
-//sleep function
-const sleep = () => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            console.log("Limit")
-            resolve();
-        }, 500)
-    });
-}
+} 
