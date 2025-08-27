@@ -67,7 +67,19 @@ export function merge(intervals) {
 // Longest Substring Without Repeating Characters
 // Given a string s, find the length of the longest substring without duplicate characters.
 export function lengthOfLongestSubstring(s) {
-    // TODO
+    let maxLength = 0;
+    let set = new Set();
+    let left = 0;
+
+    for (let right = 0; right < s.length; right++) {
+        while (set.has(s[right])) {
+            set.delete(s[left])
+            left++;
+        }
+        set.add(s[right]);
+        maxLength = Math.max(maxLength, right - left + 1);
+    }
+    return maxLength;
 };
 
 
@@ -75,14 +87,45 @@ export function lengthOfLongestSubstring(s) {
 // Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
 
 export function levelOrder(root) {
-    // TODO
+    let queue = [root];
+    let res = [];
+
+    while(queue.length && root) {
+        let valLevel = [];
+        let levelSize = queue.length;
+        for (let i = 0; i < levelSize; i++) {
+            let curNode = queue.shift();
+            valLevel.push(curNode.val);
+            if (curNode.left) queue.push(curNode.left);
+            if (curNode.right) queue.push(curNode.right);
+        }
+        res.push(valLevel);
+    }
+    return res;
 };
 
 
 // Valid Anagram 
 // Given two strings s and t, return true if t is an anagram of s, and false otherwise.
 export function isAnagram(s, t) {
-    // TODO
+    let res = true;
+    if (s.length !== t.length) {
+        res = false;
+    } else {
+        let map = new Map();
+        for ( let char of s) {
+            map.set(char, (map.get(char) || 0) + 1);
+        }
+        for (let char of t) {
+            if (!map.has(char) || map.get(char) == 0) {
+                res = false;
+            }
+            if (res) {
+                map.set(char, map.get(char) - 1);
+            }
+        }
+    }
+    return res;
 };
 
 
@@ -93,7 +136,26 @@ export function isAnagram(s, t) {
 // Given an integer target, return true if target is in matrix or false otherwise.
 // You must write a solution in O(log(m * n)) time complexity.
 export function searchMatrix(matrix, target) {
-    // TODO
+    const [rows, cols] = [matrix.length, matrix[0].length];
+    let [left, right] = [0, rows * cols - 1];
+    let res = false;
+
+    while (left <= right && !res) {
+        let mid = (left + right) >> 1;
+        const [row, col] = [Math.floor(mid / cols), mid % cols];
+        const guess = matrix[row][col];
+
+        if (guess == target) {
+            res = true;
+        }
+        if (guess > target) {
+            right = mid - 1;
+        }
+        if (guess < target) {
+            left = mid + 1;
+        }
+    }
+    return res;
 };
 
 // Linked List Cycle
@@ -101,12 +163,33 @@ export function searchMatrix(matrix, target) {
 // There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
 // Return true if there is a cycle in the linked list. Otherwise, return false.
 export function hasCycle(head) {
-    // TODO
+    let cur = head;
+    let prev = head;
+    let res = false;
+
+    while (cur && cur.next && !res) {
+        cur = cur.next.next;
+        prev = prev.next;
+        res = cur === prev ? true : false;
+    }
+    return res;
 };
 
 // Valid Palindrome 
 // A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
 // Given a string s, return true if it is a palindrome, or false otherwise.
 export function isPalindrome(s) {
-    // TODO
-}
+    s = s.toLowerCase().replace(/[^a-z0-9]/g,'');
+    let left = 0;
+    let right = s.length - 1;
+    let res = true;
+
+    while (left < right) {
+        if (s[left] !== s[right]) {
+            res = false;
+        }
+        left++;
+        right--;
+    }
+    return res;
+} 
