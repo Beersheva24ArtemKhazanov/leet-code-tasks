@@ -193,3 +193,114 @@ export function isPalindrome(s) {
     }
     return res;
 } 
+
+// You are given an array A of integers. Find the maximum number of non-intersecting segments of length 2 (two adjacent elements), such that segments have an equal sum.
+// For example, given A = [10, 1, 3, 1, 2, 2, 1, 0, 4], there are three non-intersecting segments, each whose sum is equal to 4: (1, 3), (2, 2), (0,4). Another three non-intersecting segments are: (3, 1), (2, 2), (0,4).
+export function maxNumberOfNonIntersrctingSegments(array) {
+    const map = new Map();
+    for (let i = 0; i < array.length - 1; i++) {
+        let sum = array[i] + array[i + 1];
+        map.set(sum, (map.get(sum) || 0) + 1);
+        if (array[i + 1] === array[i - 1]) {
+            map.set(sum, (map.get(sum) || 0) - 1);
+        }
+    }
+    return Math.max(...map.values());
+}
+
+// const executeFunc = limitFunc(console.log, 3)
+
+// executeFunc("Hello, World!") // => Hello, World!
+// executeFunc("Hello, World!") // => Hello, World!
+// executeFunc("Hello, World!") // => Hello, World!
+// executeFunc("Hello, World!") // => Throw new Error
+export const limitFunc = (func, limit) => {
+    let count = 0;
+    return (...params) => {
+        if (count < limit) {
+            count++;
+            return func(...params);
+        } else {
+            return "Error";
+        }
+    }
+}
+
+export const func = (arr1, arr2) => {
+    const set1 = new Set(arr1);
+    const set2 = new Set(arr2);
+
+    const intersection = arr1.filter(x => set2.has(x));
+    const onlyFirst = arr1.filter(x => !set2.has(x));
+    const onlySecond = arr2.filter(x => !set1.has(x));
+
+    return {
+        onlyFirst,
+        onlySecond,
+        intersection,
+    };
+};
+
+// // Example
+// const q = queue();
+// q.push(10);
+// q.push(20);
+// q.push(30);
+export const queue = () => {
+    let head = null;
+    let tail = null;
+    let size = 0;
+
+    // Node structure
+    const createNode = (value) => ({value, next: null});
+
+    const push = (value) => {
+        const node = createNode(value);
+        if (tail) {
+            tail.next = node;
+        }
+        tail = node;
+        if (!head) {
+            head = node;
+        }
+        size++;
+    };
+
+    const pop = () => {
+        if (!head) return undefined; // empty queue
+        const value = head.value;
+        head = head.next;
+        if (!head) { // queue became empty
+            tail = null;
+        }
+        size--;
+        return value;
+    };
+
+    const peek = () => (head ? head.value : undefined);
+
+    return {
+        get head() {
+            return head ? head.value : null;
+        },
+        get tail() {
+            return tail ? tail.value : null;
+        },
+        get size() {
+            return size;
+        },
+        push,
+        pop,
+        peek
+    };
+};
+
+//sleep function
+export const sleep = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("Limit")
+            resolve();
+        }, 500)
+    })
+};
